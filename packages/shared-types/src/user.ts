@@ -1,7 +1,10 @@
+// VM always stands for Vending Machine
+export type VMRoles = "seller" | "buyer";
+
 export interface User {
   username: string;
   deposit: number;
-  role: string[];
+  role: VMRoles;
 }
 
 export interface AuthUser extends User {

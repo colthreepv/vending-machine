@@ -6,7 +6,7 @@ const builtInUsers: AuthUser[] = [
     username: 'admin',
     password: 'admin',
     deposit: 1000,
-    role: ['seller'],
+    role: 'seller',
   },
 ]
 

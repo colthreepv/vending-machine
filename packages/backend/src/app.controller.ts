@@ -1,5 +1,8 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, UseGuards } from '@nestjs/common'
+import { User } from 'shared-types/src/user'
 import { AppService } from './app.service'
+import { JwtAuthGuard } from './auth/jwt-auth.guard'
+import { RequestUser } from './auth/user.decorator'
 
 @Controller()
 export class AppController {
@@ -8,5 +11,11 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello()
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('protected')
+  getHelloProtected(@RequestUser() user: User) {
+    return this.appService.getProtectedHello(user.username)
   }
 }

@@ -5,4 +5,8 @@ export class AppService {
   getHello(): string {
     return 'Hello World!'
   }
+
+  getProtectedHello(username: string) {
+    return { message: `Hello ${username}!` }
+  }
 }
