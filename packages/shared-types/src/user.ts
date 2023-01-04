@@ -9,5 +9,4 @@ export interface JwtUser {
 
 export interface AuthUser extends JwtUser {
   password: string;
-  balance: number;
 }

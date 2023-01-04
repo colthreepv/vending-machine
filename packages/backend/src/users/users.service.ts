@@ -9,7 +9,6 @@ const admin: AuthUser = {
   password: 'admin',
   deposit: 1000,
   role: 'seller',
-  balance: 0,
 }
 
 @Injectable()
