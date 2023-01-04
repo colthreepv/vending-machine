@@ -17,8 +17,6 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const expirationDate = new Date()
-    expirationDate.setDate(expirationDate.getDate() + 1)
     const payload = {
       sub: user.username,
       role: user.role,
