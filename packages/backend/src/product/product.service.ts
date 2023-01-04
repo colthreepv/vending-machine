@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { User } from 'shared-types/src/user'
+import { JwtUser } from 'shared-types/src/user'
 
 export interface Product {
   name: string
@@ -16,7 +16,7 @@ export class ProductService {
     return product
   }
 
-  async create(product: Product, user: User) {
+  async create(product: Product, user: JwtUser) {
     const newProduct: Product = {
       name: product.name,
       owner: user.username,

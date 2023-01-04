@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common'
-import { User } from 'shared-types/src/user'
+import { JwtUser } from 'shared-types/src/user'
 import { AppService } from './app.service'
 import { JwtAuthGuard } from './auth/jwt-auth.guard'
 import { RequestUser } from './auth/user.decorator'
@@ -15,7 +15,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('protected')
-  getHelloProtected(@RequestUser() user: User) {
+  getHelloProtected(@RequestUser() user: JwtUser) {
     return this.appService.getProtectedHello(user.username)
   }
 }

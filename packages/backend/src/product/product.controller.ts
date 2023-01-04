@@ -10,7 +10,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import { User } from 'shared-types/src/user'
+import { JwtUser } from 'shared-types/src/user'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { UserRole } from 'src/auth/user-role.guard'
 import { RequestUser } from 'src/auth/user.decorator'
@@ -37,7 +37,7 @@ export class ProductController {
 
   @Post()
   @UseGuards(JwtAuthGuard, new UserRole('seller'))
-  async createProduct(@Body() product: Product, @RequestUser() user: User) {
+  async createProduct(@Body() product: Product, @RequestUser() user: JwtUser) {
     const previous = await this.productService.get(product.name)
     if (previous != null) throw new ConflictException('Product already exists')
 

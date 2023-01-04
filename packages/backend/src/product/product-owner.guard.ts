@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
-import { User } from 'shared-types/src/user'
+import { JwtUser } from 'shared-types/src/user'
 import { ProductService } from './product.service'
 
 @Injectable()
@@ -8,7 +8,7 @@ export class IsProductOwner implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest()
-    const user = request.user as User
+    const user = request.user as JwtUser
     if (user == null) return false
 
     const id = request.params.id
