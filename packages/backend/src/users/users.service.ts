@@ -1,28 +1,39 @@
 import { ConflictException, Injectable } from '@nestjs/common'
 import { AuthUser } from 'shared-types/src/user'
+import { UserAccountService } from 'src/user-account/user-account.service'
 
-const builtInUsers: AuthUser[] = [
-  {
-    username: 'admin',
-    password: 'admin',
-    deposit: 1000,
-    role: 'seller',
-  },
-]
+const users: AuthUser[] = []
+
+const admin: AuthUser = {
+  username: 'admin',
+  password: 'admin',
+  deposit: 1000,
+  role: 'seller',
+  balance: 0,
+}
 
 @Injectable()
 export class UsersService {
-  async findOne(username: string): Promise<AuthUser | undefined> {
-    return builtInUsers.find((user) => user.username === username)
+  constructor(private readonly userAccountService: UserAccountService) {
+    void this.init()
+  }
+
+  async init() {
+    await this.create(admin)
+  }
+
+  async get(username: string): Promise<AuthUser | undefined> {
+    return users.find((user) => user.username === username)
   }
 
   async create(user: AuthUser): Promise<AuthUser> {
-    const existingUser = await this.findOne(user.username)
+    const existingUser = await this.get(user.username)
     if (existingUser != null) {
       throw new ConflictException('User already exists')
     }
 
-    builtInUsers.push(user)
+    users.push(user)
+    await this.userAccountService.createAccount(user.username)
     return user
   }
 }
