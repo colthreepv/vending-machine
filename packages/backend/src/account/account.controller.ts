@@ -9,18 +9,18 @@ import { AccountService } from './account.service'
 
 @Controller('account')
 export class AccountController {
-  constructor(private readonly userService: AccountService) {}
+  constructor(private readonly accountService: AccountService) {}
 
   @Post('deposit')
   @UseGuards(JwtAuthGuard, new UserRole('buyer'))
   async deposit(@Body() body: Coins, @RequestUser() user: JwtUser) {
-    return await this.userService.deposit(user.username, body)
+    return await this.accountService.deposit(user.username, body)
   }
 
   @Post('buy')
   @UseGuards(JwtAuthGuard, new UserRole('buyer'))
   async buy(@Body() payload: BuyPayload, @RequestUser() user: JwtUser) {
     const { product, qty } = payload
-    return await this.userService.buy(user.username, product, qty)
+    return await this.accountService.buy(user.username, product, qty)
   }
 }
