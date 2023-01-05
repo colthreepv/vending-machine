@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { Coins } from 'shared-types/src/crud'
 import { Vault } from './vault'
-import { freshAccount } from './vault.utils'
-
-const VMAccounts = new Map<string, Coins>()
+import { freshAccount, spendCoins } from './vault.utils'
 
 @Injectable()
 export class UserAccountService {
   private readonly vault = new Vault()
+  private readonly accounts = new Map<string, Coins>()
 
   async createAccount(username: string): Promise<void> {
-    VMAccounts.set(username, freshAccount())
+    this.accounts.set(username, freshAccount())
   }
 
   async depositAccount(username: string, coins: Coins): Promise<Coins> {
-    const account = VMAccounts.get(username)
+    const account = this.accounts.get(username)
     if (account == null) {
       throw new Error('Account not found')
     }
@@ -26,16 +25,28 @@ export class UserAccountService {
       nextAccount[coin] = prev + actual
     })
 
-    VMAccounts.set(username, nextAccount)
+    this.accounts.set(username, nextAccount)
     return nextAccount
   }
 
   async checkAccount(username: string): Promise<Coins> {
-    const account = VMAccounts.get(username)
+    const account = this.accounts.get(username)
     if (account == null) {
       throw new Error('Account not found')
     }
 
     return account
+  }
+
+  async buy(username: string, amount: number): Promise<Coins> {
+    const account = this.accounts.get(username)
+    if (account == null) {
+      throw new Error('Account not found')
+    }
+
+    const change = spendCoins(account, amount, this.vault)
+    this.accounts.set(username, freshAccount()) // flush the account
+
+    return change
   }
 }

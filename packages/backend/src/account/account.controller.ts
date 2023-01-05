@@ -1,4 +1,11 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  InternalServerErrorException,
+  Post,
+  PreconditionFailedException,
+  UseGuards,
+} from '@nestjs/common'
 import { Coins } from 'shared-types/src/crud'
 import { JwtUser } from 'shared-types/src/user'
 import { BuyPayload } from 'shared-types/src/account'
@@ -21,6 +28,13 @@ export class AccountController {
   @UseGuards(JwtAuthGuard, new UserRole('buyer'))
   async buy(@Body() payload: BuyPayload, @RequestUser() user: JwtUser) {
     const { product, qty } = payload
-    return await this.accountService.buy(user.username, product, qty)
+    try {
+      return await this.accountService.buy(user.username, product, qty)
+    } catch (error) {
+      // this is not the best way to handle errors
+      if (error.message === 'Insufficient product quantity') throw new PreconditionFailedException(error.message)
+      if (error.message === 'Product not found') throw new PreconditionFailedException(error.message)
+      throw new InternalServerErrorException(error)
+    }
   }
 }

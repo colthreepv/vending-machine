@@ -4,6 +4,8 @@ import { JwtUser } from 'shared-types/src/user'
 export interface Product {
   name: string
   owner: string // username
+  price: number // value is expressed in cents, ex: 1000 = 10.00
+  quantity: number
 }
 
 const productStorage: Product[] = []
@@ -17,10 +19,7 @@ export class ProductService {
   }
 
   async create(product: Product, user: JwtUser) {
-    const newProduct: Product = {
-      name: product.name,
-      owner: user.username,
-    }
+    const newProduct: Product = { ...product, owner: user.username }
     productStorage.push(newProduct)
     return newProduct
   }
@@ -32,7 +31,9 @@ export class ProductService {
 
   async update(id: string, product: Product) {
     const idx = productStorage.findIndex((product) => product.name === id)
-    productStorage.splice(idx, 1, product)
+    const formerProduct = productStorage[idx]
+    const updatedProduct: Product = { ...formerProduct, price: product.price, quantity: product.quantity }
+    productStorage.splice(idx, 1, updatedProduct)
 
     return product
   }
