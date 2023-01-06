@@ -22,7 +22,6 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard, new UserRole('seller'))
   async listProducts() {
     return await this.productService.list()
   }

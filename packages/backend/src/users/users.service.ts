@@ -7,7 +7,6 @@ const users: AuthUser[] = []
 const admin: AuthUser = {
   username: 'admin',
   password: 'admin',
-  deposit: 1000,
   role: 'seller',
 }
 

@@ -14,7 +14,7 @@ import { UserRole } from 'src/auth/user-role.guard'
 import { RequestUser } from 'src/auth/user.decorator'
 import { AccountService } from './account.service'
 
-@Controller('account')
+@Controller()
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
@@ -32,9 +32,20 @@ export class AccountController {
       return await this.accountService.buy(user.username, product, qty)
     } catch (error) {
       // this is not the best way to handle errors
+      if (error.message === 'Insufficient user balance') throw new PreconditionFailedException(error.message)
       if (error.message === 'Insufficient product quantity') throw new PreconditionFailedException(error.message)
       if (error.message === 'Product not found') throw new PreconditionFailedException(error.message)
       throw new InternalServerErrorException(error)
+    }
+  }
+
+  @Post('reset')
+  @UseGuards(JwtAuthGuard, new UserRole('buyer'))
+  async reset(@RequestUser() user: JwtUser) {
+    try {
+      return await this.accountService.flush(user.username)
+    } catch (error) {
+      if (error.message === 'User not found') throw new PreconditionFailedException(error.message)
     }
   }
 }

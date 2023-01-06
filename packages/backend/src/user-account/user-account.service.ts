@@ -45,8 +45,21 @@ export class UserAccountService {
     }
 
     const change = spendCoins(account, amount, this.vault)
-    this.accounts.set(username, freshAccount()) // flush the account
+    await this.flushAccount(username)
 
     return change
+  }
+
+  async flushAccount(username: string): Promise<Coins> {
+    const account = this.accounts.get(username)
+    if (account == null) {
+      throw new Error('Account not found')
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const coins = this.accounts.get(username)!
+    this.accounts.delete(username)
+
+    return coins
   }
 }
