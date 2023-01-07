@@ -1,5 +1,7 @@
-import { Coins, validCoinList } from 'shared-types/src/crud'
+import { Coins, ValidCoin } from 'shared-types/src/crud'
 import { freshAccount } from './vault.utils'
+
+export const validCoinList: ValidCoin[] = ['5', '10', '20', '50', '100']
 
 export class Vault {
   private readonly v = freshAccount()
