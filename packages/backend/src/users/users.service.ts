@@ -4,21 +4,9 @@ import { UserAccountService } from 'src/user-account/user-account.service'
 
 const users: AuthUser[] = []
 
-const admin: AuthUser = {
-  username: 'admin',
-  password: 'admin',
-  role: 'seller',
-}
-
 @Injectable()
 export class UsersService {
-  constructor(private readonly userAccountService: UserAccountService) {
-    void this.init()
-  }
-
-  async init() {
-    await this.create(admin)
-  }
+  constructor(private readonly userAccountService: UserAccountService) {}
 
   async get(username: string): Promise<AuthUser | undefined> {
     return users.find((user) => user.username === username)
@@ -27,6 +15,7 @@ export class UsersService {
   async create(user: AuthUser): Promise<AuthUser> {
     const existingUser = await this.get(user.username)
     if (existingUser != null) {
+      console.log({ user })
       throw new ConflictException('User already exists')
     }
 

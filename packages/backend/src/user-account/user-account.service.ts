@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Coins } from 'shared-types/src/crud'
+import { Coins, ValidCoin } from 'shared-types/src/crud'
 import { Vault } from './vault'
 import { freshAccount, spendCoins } from './vault.utils'
 
@@ -19,9 +19,9 @@ export class UserAccountService {
     }
 
     const nextAccount = freshAccount()
-    ;[5, 10, 20, 50, 100].forEach((coin) => {
-      const prev = Number(account[coin]) ?? 0
-      const actual = Number(coins[coin]) ?? 0
+    ;['5', '10', '20', '50', '100'].forEach((coin: ValidCoin) => {
+      const prev = account[coin]
+      const actual = coins[coin]
       nextAccount[coin] = prev + actual
     })
 
@@ -38,7 +38,7 @@ export class UserAccountService {
     return account
   }
 
-  async buy(username: string, amount: number): Promise<Coins> {
+  async spend(username: string, amount: number): Promise<Coins> {
     const account = this.accounts.get(username)
     if (account == null) {
       throw new Error('Account not found')

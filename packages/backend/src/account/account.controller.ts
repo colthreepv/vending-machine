@@ -6,7 +6,7 @@ import {
   PreconditionFailedException,
   UseGuards,
 } from '@nestjs/common'
-import { Coins } from 'shared-types/src/crud'
+import { Coins, DepositPayload } from 'shared-types/src/crud'
 import { JwtUser } from 'shared-types/src/user'
 import { BuyPayload } from 'shared-types/src/account'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
@@ -20,8 +20,15 @@ export class AccountController {
 
   @Post('deposit')
   @UseGuards(JwtAuthGuard, new UserRole('buyer'))
-  async deposit(@Body() body: Coins, @RequestUser() user: JwtUser) {
-    return await this.accountService.deposit(user.username, body)
+  async deposit(@Body() body: DepositPayload, @RequestUser() user: JwtUser) {
+    const coins: Coins = {
+      '5': body['5'] ?? 0,
+      '10': body['10'] ?? 0,
+      '20': body['20'] ?? 0,
+      '50': body['50'] ?? 0,
+      '100': body['100'] ?? 0,
+    }
+    return await this.accountService.deposit(user.username, coins)
   }
 
   @Post('buy')

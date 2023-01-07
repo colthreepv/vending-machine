@@ -1,4 +1,4 @@
-import { Coins } from 'shared-types/src/crud'
+import { Coins, validCoinList } from 'shared-types/src/crud'
 import { freshAccount } from './vault.utils'
 
 export class Vault {
@@ -9,24 +9,24 @@ export class Vault {
   }
 
   private init(coins: Coins): Coins {
-    for (const coinValue of [100, 50, 20, 10, 5]) {
-      this.v[coinValue] = Number(coins[coinValue] ?? 0)
+    for (const coinValue of validCoinList) {
+      this.v[coinValue] = coins[coinValue]
     }
 
     return this.v
   }
 
   deposit(coins: Coins): Coins {
-    for (const coinValue of [100, 50, 20, 10, 5]) {
-      this.v[coinValue] = Number(this.v[coinValue] ?? 0) + Number(coins[coinValue] ?? 0)
+    for (const coinValue of validCoinList) {
+      this.v[coinValue] = this.v[coinValue] + coins[coinValue]
     }
 
     return this.v
   }
 
   withdraw(coins: Coins): Coins {
-    for (const coinValue of [100, 50, 20, 10, 5]) {
-      this.v[coinValue] = Number(this.v[coinValue] ?? 0) - Number(coins[coinValue] ?? 0)
+    for (const coinValue of validCoinList) {
+      this.v[coinValue] = this.v[coinValue] - coins[coinValue]
     }
 
     return this.v

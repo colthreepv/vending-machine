@@ -10,13 +10,7 @@ export const freshAccount = (): Coins => ({
 })
 
 export const fromCoinsToNumber = (coins: Coins): number => {
-  return (
-    (coins['5'] ?? 0) * 5 +
-    (coins['10'] ?? 0) * 10 +
-    (coins['20'] ?? 0) * 20 +
-    (coins['50'] ?? 0) * 50 +
-    (coins['100'] ?? 0) * 100
-  )
+  return coins['5'] * 5 + coins['10'] * 10 + coins['20'] * 20 + coins['50'] * 50 + coins['100'] * 100
 }
 
 export const calculateRest = (vault: Vault, rest: number): Coins => {
@@ -26,12 +20,12 @@ export const calculateRest = (vault: Vault, rest: number): Coins => {
   const vaultCoins = vault.check()
 
   for (const coinValue of [100, 50, 20, 10, 5]) {
-    const availableCoins = vaultCoins[coinValue] ?? 0
+    const availableCoins = vaultCoins[coinValue]
     if (availableCoins === 0) continue
 
     const amountTaken = Math.min(availableCoins, Math.floor(remaining / coinValue))
     remaining -= amountTaken * coinValue
-    newCoins[coinValue] = amountTaken
+    newCoins[String(coinValue)] = amountTaken
     if (remaining <= 0) break
   }
 

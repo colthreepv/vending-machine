@@ -10,12 +10,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
+import { ProductCreatePayload, ProductUpdatePayload } from 'shared-types/src/crud'
 import { JwtUser } from 'shared-types/src/user'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { UserRole } from 'src/auth/user-role.guard'
 import { RequestUser } from 'src/auth/user.decorator'
 import { IsProductOwner } from './product-owner.guard'
-import { Product, ProductService } from './product.service'
+import { ProductService } from './product.service'
 
 @Controller('product')
 export class ProductController {
@@ -36,7 +37,7 @@ export class ProductController {
 
   @Post()
   @UseGuards(JwtAuthGuard, new UserRole('seller'))
-  async createProduct(@Body() product: Product, @RequestUser() user: JwtUser) {
+  async createProduct(@Body() product: ProductCreatePayload, @RequestUser() user: JwtUser) {
     const previous = await this.productService.get(product.name)
     if (previous != null) throw new ConflictException('Product already exists')
 
@@ -45,7 +46,7 @@ export class ProductController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, new UserRole('seller'), IsProductOwner)
-  async updateProduct(@Param('id') id: string, @Body() product: Product) {
+  async updateProduct(@Param('id') id: string, @Body() product: ProductUpdatePayload) {
     const oldProduct = await this.productService.get(id)
     if (oldProduct == null) throw new NotFoundException('Product not found')
 

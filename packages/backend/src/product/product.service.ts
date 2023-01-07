@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common'
+import { ProductCreatePayload, Product, ProductUpdatePayload } from 'shared-types/src/crud'
 import { JwtUser } from 'shared-types/src/user'
-
-export interface Product {
-  name: string
-  owner: string // username
-  price: number // value is expressed in cents, ex: 1000 = 10.00
-  quantity: number
-}
 
 const productStorage: Product[] = []
 
@@ -18,7 +12,7 @@ export class ProductService {
     return product
   }
 
-  async create(product: Product, user: JwtUser) {
+  async create(product: ProductCreatePayload, user: JwtUser) {
     const newProduct: Product = { ...product, owner: user.username }
     productStorage.push(newProduct)
     return newProduct
@@ -29,7 +23,7 @@ export class ProductService {
     productStorage.splice(idx, 1)
   }
 
-  async update(id: string, product: Product) {
+  async update(id: string, product: ProductUpdatePayload) {
     const idx = productStorage.findIndex((product) => product.name === id)
     const formerProduct = productStorage[idx]
     const updatedProduct: Product = { ...formerProduct, price: product.price, quantity: product.quantity }

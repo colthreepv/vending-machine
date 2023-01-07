@@ -37,15 +37,9 @@ export class AccountService {
     const userBalance = fromCoinsToNumber(await this.userAccountService.checkAccount(username))
     if (userBalance < amount) throw new Error('Insufficient user balance')
 
-    const restCoins = await this.userAccountService.buy(username, amount)
+    const restCoins = await this.userAccountService.spend(username, amount)
 
-    const change: Change = [
-      restCoins['5'] ?? 0,
-      restCoins['10'] ?? 0,
-      restCoins['20'] ?? 0,
-      restCoins['50'] ?? 0,
-      restCoins['100'] ?? 0,
-    ]
+    const change: Change = [restCoins['5'], restCoins['10'], restCoins['20'], restCoins['50'], restCoins['100']]
 
     const response: BuyResponse = {
       spent: amount,
