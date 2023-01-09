@@ -28,10 +28,7 @@ export class AccountService {
     // never going to happen because its checked on the guard
     if (user == null) throw new Error('User not found')
 
-    const product = await this.productService.get(productId)
-    if (product == null) throw new Error('Product not found')
-    if (product.quantity < qty) throw new Error('Insufficient product quantity')
-
+    const product = await this.productService.buy(productId, qty)
     const amount = product.price * qty
 
     const userBalance = fromCoinsToNumber(await this.userAccountService.checkAccount(username))
@@ -40,7 +37,6 @@ export class AccountService {
     const restCoins = await this.userAccountService.spend(username, amount)
 
     const change: Change = [restCoins['5'], restCoins['10'], restCoins['20'], restCoins['50'], restCoins['100']]
-
     const response: BuyResponse = {
       spent: amount,
       product: productId,

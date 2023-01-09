@@ -56,6 +56,10 @@ describe('Accounting integration test', () => {
     expect(restCoins).toHaveProperty('product', product.name)
     expect(restCoins).toHaveProperty('qty', 1)
     expect(restCoins).toHaveProperty('change', [1, 1, 1, 0, 0])
+
+    const productListAfter = await productModule.list()
+    expect(productListAfter.length).toBe(1)
+    expect(productListAfter[0].quantity).toBe(9)
   })
 
   it('a user deposit coins and gets them back, without a purchase', async () => {

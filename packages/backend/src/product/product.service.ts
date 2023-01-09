@@ -32,6 +32,16 @@ export class ProductService {
     return product
   }
 
+  async buy(id: string, qty: number) {
+    const idx = productStorage.findIndex((product) => product.name === id)
+    if (idx === -1) throw new Error('Product not found')
+    const formerProduct = productStorage[idx]
+    const updatedProduct: Product = { ...formerProduct, quantity: formerProduct.quantity - qty }
+    productStorage.splice(idx, 1, updatedProduct)
+
+    return updatedProduct
+  }
+
   async list() {
     return productStorage
   }
