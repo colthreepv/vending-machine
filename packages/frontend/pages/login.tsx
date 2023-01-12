@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import LoginForm from '../components/login-form/login-form.component'
 import Navbar from '../components/navbar/navbar.component'
 import ProductList from '../components/product-list/product-list.component'
 
-export default function Home() {
+export default function Login() {
   return (
     <>
       <Head>
@@ -14,7 +15,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <Navbar></Navbar>
-        <ProductList></ProductList>
+        <LoginForm></LoginForm>
       </main>
     </>
   )
