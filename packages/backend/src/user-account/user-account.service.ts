@@ -58,8 +58,8 @@ export class UserAccountService {
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const coins = this.accounts.get(username)!
-    this.accounts.delete(username)
+    this.accounts.set(username, freshAccount())
 
-    return coins
+    return coins // returns the change
   }
 }
